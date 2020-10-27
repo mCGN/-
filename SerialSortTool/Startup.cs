@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SerialSortTool
@@ -15,6 +16,9 @@ namespace SerialSortTool
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
+            services.AddMvc();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -24,6 +28,18 @@ namespace SerialSortTool
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseMiddleware<ErrorHandlerMiddleware>();
+            }
+            app.UseCors(c => c.SetIsOriginAllowed(d => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+
+            app.UseStaticFiles();
+
+            app.UseSignalR(c => c.MapHub<SerialHub>("/serial"));
+
+            app.UseMvc();
+
 
             app.Run(async (context) =>
             {

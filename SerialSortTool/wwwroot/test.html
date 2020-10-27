@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h1>测试页面</h1>
+
+    <script src="lib/signalr.js"></script>
+    <script src="lib/hubjs.js"></script>
+    <script>
+        function cn() {
+            serialHub('COM2', function (text) {
+                //console.log('新消息:' + text);
+                var obj = JSON.parse(text);
+                console.log(obj.data)
+            })
+        };
+        cn()
+    </script>
+</body>
+</html>
